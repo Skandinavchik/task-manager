@@ -1,0 +1,19 @@
+@use '@angular/material' as mat;
+
+:root {
+  @include mat.button-overrides((
+    filled-container-shape: 0.5rem,
+    filled-label-text-size: var(--mat-sys-label-large-size),
+    outlined-container-shape: 0.5rem,
+    outlined-label-text-size: var(--mat-sys-label-large-size),
+  ));
+  @include mat.fab-overrides((
+    small-container-shape: 0.5rem,
+    small-container-color: var(--mat-sys-surface-container),
+    small-container-elevation-shadow: var(--mat-sys-level0),
+    small-focus-container-elevation-shadow: var(--mat-sys-level0),
+    small-hover-container-elevation-shadow: var(--mat-sys-level0),
+    small-pressed-container-elevation-shadow: var(--mat-sys-level0),
+    small-foreground-color: var(--mat-sys-on-surface),
+  ));
+}

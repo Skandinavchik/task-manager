@@ -1,0 +1,21 @@
+@use "@angular/material" as mat;
+@use "./theme-colors" as theme;
+
+html {
+  color-scheme: light;
+  @include mat.theme((
+    color: theme.$primary-palette,
+    typography: (
+      plain-family: Nunito Sans,
+      brand-family: Nunito Sans,
+      bold-weight: 700,
+      medium-weight: 500,
+      regular-weight: 400,
+    ),
+    density: 0,
+  ));
+}
+
+html.dark-mode {
+  color-scheme: dark;
+}
