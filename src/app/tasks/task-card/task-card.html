@@ -1,0 +1,15 @@
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <h3 class="text-base font-bold line-clamp-1">
+      {{ task().title }}
+    </h3>
+  </mat-card-header>
+
+  <mat-card-content class="grow">
+    <p class="line-clamp-2 mt-4 text-(--mat-sys-secondary)">{{ task().description }}</p>
+  </mat-card-content>
+
+  <mat-card-actions align="end" class="my-2">
+    <button matButton="filled" [routerLink]="['/tasks', { outlets: { 'task-details': [task().id] }}]">Details</button>
+  </mat-card-actions>
+</mat-card>

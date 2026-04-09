@@ -10,6 +10,11 @@ export const routes: Routes = [
         loadComponent: () => import('./tasks/tasks').then(m => m.Tasks),
         outlet: 'tasks-list',
       },
+      {
+        path: ':id',
+        loadComponent: () => import('./tasks/task-details/task-details').then(m => m.TaskDetails),
+        outlet: 'task-details',
+      },
     ],
   },
   { path: '', redirectTo: '/tasks', pathMatch: 'full' },

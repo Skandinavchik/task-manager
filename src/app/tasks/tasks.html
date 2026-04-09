@@ -1,1 +1,17 @@
 <app-search class="grow" placeholder="Search tasks..." [debounceMs]="300" (search)="onSearch($event)" />
+
+<ul class="space-y-4 px-4">
+  @for (task of tasks(); track task.id) {
+    <li>
+      @defer (on viewport) {
+      <app-task-card class="w-full" [task]="task" />
+      } @placeholder {
+      <div class="h-32 bg-gray-100 rounded-lg animate-pulse"></div>
+      }
+    </li>
+  } @empty {
+    <li class="text-center py-12 text-(--mat-sys-secondary)">
+      No tasks found.
+    </li>
+  }
+</ul>

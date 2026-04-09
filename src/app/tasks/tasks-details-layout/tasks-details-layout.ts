@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core'
 import { RouterOutlet } from '@angular/router'
+import { LayoutService } from '../services/layout'
 
 @Component({
   selector: 'app-tasks-details-layout',
@@ -8,13 +9,13 @@ import { RouterOutlet } from '@angular/router'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TasksDetailsLayout {
-  detailActive = signal(false)
+  layout = inject(LayoutService)
 
   masterClasses = computed(() =>
     [
       'overflow-y-auto',
       'w-full',
-      this.detailActive() ? 'hidden' : 'block',
+      this.layout.detailActive() ? 'hidden' : 'block',
       'xl:block xl:w-96 xl:shrink-0',
     ].join(' '),
   )
@@ -23,7 +24,7 @@ export class TasksDetailsLayout {
     [
       'overflow-y-auto',
       'w-full',
-      this.detailActive() ? 'block' : 'hidden',
+      this.layout.detailActive() ? 'block' : 'hidden',
       'xl:block xl:flex-1',
     ].join(' '),
   )
