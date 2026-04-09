@@ -1,6 +1,6 @@
 <app-search class="grow" placeholder="Search tasks..." [debounceMs]="300" (search)="onSearch($event)" />
 
-<ul class="space-y-4 px-4">
+<ul class="space-y-4 px-4 pb-4">
   @for (task of tasks(); track task.id) {
     <li>
       @defer (on viewport) {

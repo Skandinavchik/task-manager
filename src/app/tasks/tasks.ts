@@ -11,7 +11,7 @@ export type Task = {
 const tasks: Task[] = [
   {
     id: 'asdsadasdasd',
-    title: 'Fist task',
+    title: 'Fist task Title should be very long to test title clamp',
     description: 'Description of the first task. It should be very long to test card behavior. The long string should clamp to 2 lines with 3 dots',
   },
   {
