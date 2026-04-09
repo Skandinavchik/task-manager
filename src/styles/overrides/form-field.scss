@@ -1,0 +1,12 @@
+@use '@angular/material' as mat;
+
+:root {
+  @include mat.form-field-overrides((
+    container-height: 2.5rem,
+    container-vertical-padding: 0,
+    outlined-container-shape: 0.5rem,
+    outlined-input-text-placeholder-color: var(--mat-sys-outline),
+    container-text-line-height: 2.5,
+    outlined-outline-color: var(--mat-sys-outline-variant),
+  ));
+}

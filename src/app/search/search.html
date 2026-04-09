@@ -1,0 +1,10 @@
+<form class="px-4 pt-4 flex gap-2">
+  <mat-form-field appearance="outline" class="w-full">
+    <input matInput [placeholder]="placeholder()" [formControl]="searchControl" />
+    @if (searchControl.value) {
+    <button matIconButton matSuffix (click)="onClear()" type="button" aria-label="Clear">
+      <mat-icon>close</mat-icon>
+    </button>
+    }
+  </mat-form-field>
+</form>

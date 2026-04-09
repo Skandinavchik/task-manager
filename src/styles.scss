@@ -1,6 +1,7 @@
 @use '@angular/material' as mat;
 @use './styles/theme/theme.scss';
 @use './styles/overrides/button.scss';
+@use './styles/overrides/form-field.scss';
 @import './styles//tailwind.css';
 
 body {
