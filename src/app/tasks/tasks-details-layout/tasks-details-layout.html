@@ -1,0 +1,15 @@
+<div class="flex h-dvh overflow-hidden container gap-4">
+  <aside [class]="masterClasses()">
+    <router-outlet name="tasks-list" />
+  </aside>
+
+  <main [class]="detailClasses()">
+    <router-outlet name="task-details" />
+
+    @if (!detailActive()) {
+    <div class="hidden xl:flex h-full items-center justify-center text-(--mat-sys-secondary)">
+      <p>Select a task to see details</p>
+    </div>
+    }
+  </main>
+</div>
