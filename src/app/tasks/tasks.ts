@@ -1,53 +1,38 @@
-import { Component, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core'
 import { Search } from '../search/search'
 import { TaskCard } from './task-card/task-card'
+import { SupabaseService } from '../supabase/supabase'
 
 export type Task = {
   id: string
   title: string
-  description: string
+  description: string | null
 }
-
-const tasks: Task[] = [
-  {
-    id: 'asdsadasdasd',
-    title: 'Fist task Title should be very long to test title clamp',
-    description: 'Description of the first task. It should be very long to test card behavior. The long string should clamp to 2 lines with 3 dots',
-  },
-  {
-    id: 'asdasfsdfgfdgfdg',
-    title: 'Second task',
-    description: 'Description of the second task',
-  },
-  {
-    id: 'asdsadasrtyrtytrydasd',
-    title: 'Fist task',
-    description: 'Description of the first task. It should be very long to test card behavior. The long string should clamp to 2 lines with 3 dots',
-  },
-  {
-    id: 'tgytrytryutrtrrt',
-    title: 'Second task',
-    description: 'Description of the second task',
-  },
-  {
-    id: 'opipiouiouiuyoiuo',
-    title: 'Fist task',
-    description: 'Description of the first task. It should be very long to test card behavior. The long string should clamp to 2 lines with 3 dots',
-  },
-  {
-    id: 'qwewqeqweqweqw',
-    title: 'Second task',
-    description: 'Description of the second task',
-  },
-]
 
 @Component({
   selector: 'app-tasks',
   imports: [Search, TaskCard],
   templateUrl: './tasks.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Tasks {
-  tasks = signal<Task[]>(tasks)
+export class Tasks implements OnInit {
+  supabaseService = inject(SupabaseService)
+  isLoading = signal(false)
+  tasks = signal<Task[]>([])
+
+  async getTasks() {
+    this.isLoading.update(current => !current)
+    const { data } = await this.supabaseService.client
+      .from('tasks')
+      .select('*')
+
+    this.tasks.set(data as Task[])
+    this.isLoading.update(current => !current)
+  }
+
+  ngOnInit() {
+    this.getTasks()
+  }
 
   onSearch(queryString: string) {
     console.log(queryString)

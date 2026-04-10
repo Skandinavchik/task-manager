@@ -1,6 +1,9 @@
 <app-search class="grow" placeholder="Search tasks..." [debounceMs]="300" (search)="onSearch($event)" />
 
-<ul class="space-y-4 px-4 pb-4">
+@if (isLoading()) {
+  <p>Loading...</p>
+} @else {
+  <ul class="space-y-4 px-4 pb-4">
   @for (task of tasks(); track task.id) {
     <li>
       @defer (on viewport) {
@@ -14,4 +17,5 @@
       No tasks found.
     </li>
   }
-</ul>
+  </ul>
+}
