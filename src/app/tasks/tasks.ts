@@ -1,13 +1,7 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core'
 import { Search } from '../search/search'
 import { TaskCard } from './task-card/task-card'
-import { SupabaseService } from '../supabase/supabase'
-
-export type Task = {
-  id: string
-  title: string
-  description: string | null
-}
+import { TasksService } from './services/tasks.service'
 
 @Component({
   selector: 'app-tasks',
@@ -16,22 +10,10 @@ export type Task = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Tasks implements OnInit {
-  supabaseService = inject(SupabaseService)
-  isLoading = signal(false)
-  tasks = signal<Task[]>([])
-
-  async getTasks() {
-    this.isLoading.update(current => !current)
-    const { data } = await this.supabaseService.client
-      .from('tasks')
-      .select('*')
-
-    this.tasks.set(data as Task[])
-    this.isLoading.update(current => !current)
-  }
+  tasksService = inject(TasksService)
 
   ngOnInit() {
-    this.getTasks()
+    this.tasksService.loadTasks()
   }
 
   onSearch(queryString: string) {

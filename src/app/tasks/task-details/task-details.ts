@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, input, OnDestroy, OnInit } from '@angular/core'
-import { LayoutService } from '../services/layout'
+import { LayoutService } from '../services/layout.service'
 
 @Component({
   selector: 'app-task-details',

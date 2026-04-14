@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core'
 import { RouterOutlet } from '@angular/router'
-import { LayoutService } from '../services/layout'
+import { LayoutService } from '../services/layout.service'
 
 @Component({
   selector: 'app-tasks-details-layout',
