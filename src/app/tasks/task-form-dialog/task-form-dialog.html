@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>{{ title }}</h2>
+
+<mat-dialog-content class="!p-0">
+  @if (error(); as msg) {
+    <div class="px-4 pt-3 text-sm text-(--mat-sys-error)">{{ msg }}</div>
+  }
+
+  <app-task-form
+    [task]="task"
+    [submitting]="submitting()"
+    [submitLabel]="submitLabel"
+    (formSubmit)="onSubmit($event)"
+    (cancel)="onCancel()"
+  />
+</mat-dialog-content>

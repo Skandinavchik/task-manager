@@ -1,0 +1,19 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-4 p-4">
+  <mat-form-field appearance="outline">
+    <input matInput formControlName="title" maxlength="200" required placeholder="Title" />
+    @if (form.controls.title.hasError('required') && form.controls.title.touched) {
+      <mat-error>Title is required</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <textarea matInput formControlName="description" rows="4" placeholder="Description"></textarea>
+  </mat-form-field>
+
+  <div class="flex justify-end gap-2">
+    <button matButton="outlined" type="button" (click)="onCancel()" [disabled]="submitting()">Cancel</button>
+    <button matButton="filled" type="submit" [disabled]="submitting() || form.invalid">
+      {{ submitLabel() }}
+    </button>
+  </div>
+</form>

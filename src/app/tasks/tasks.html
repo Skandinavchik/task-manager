@@ -1,6 +1,6 @@
 <div class="sticky top-0 z-10 bg-(--mat-sys-surface) px-4 pb-6">
   <app-search class="grow block" placeholder="Search tasks..." [debounceMs]="300" (search)="onSearch($event)" />
-  <button matButton="filled" class="w-full">Add Task</button>
+  <button matButton="filled" class="w-full" (click)="openCreateDialog()">Add Task</button>
 </div>
 
 <ul class="space-y-4 px-4 pb-4">

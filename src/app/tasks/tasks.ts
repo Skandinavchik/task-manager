@@ -1,9 +1,11 @@
-import { effect, ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, viewChild } from '@angular/core'
+import { effect, ChangeDetectionStrategy, Component, ElementRef, inject, viewChild } from '@angular/core'
 import { Search } from '../search/search'
 import { TaskCard } from './task-card/task-card'
 import { TasksService } from './services/tasks.service'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { MatButtonModule } from '@angular/material/button'
+import { MatDialog } from '@angular/material/dialog'
+import { TaskFormDialog } from './task-form-dialog/task-form-dialog'
 
 @Component({
   selector: 'app-tasks',
@@ -11,8 +13,9 @@ import { MatButtonModule } from '@angular/material/button'
   templateUrl: './tasks.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Tasks implements OnInit {
+export class Tasks {
   tasksService = inject(TasksService)
+  private readonly dialog = inject(MatDialog)
   scrollTrigger = viewChild<ElementRef>('scrollTrigger')
 
   constructor() {
@@ -32,11 +35,15 @@ export class Tasks implements OnInit {
     })
   }
 
-  ngOnInit() {
-    this.tasksService.loadTasks()
-  }
-
   onSearch(queryString: string) {
     this.tasksService.search(queryString)
+  }
+
+  openCreateDialog() {
+    this.dialog.open(TaskFormDialog, {
+      width: '480px',
+      maxWidth: '95vw',
+      autoFocus: 'first-tabbable',
+    })
   }
 }
