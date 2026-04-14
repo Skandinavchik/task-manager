@@ -1,0 +1,46 @@
+name: Angular CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Create environment file
+        run: |
+          mkdir -p src/environments
+          cat > src/environments/environment.development.ts <<'EOF'
+          export const environment = {
+            production: false,
+            supabaseUrl: '${{ secrets.SUPABASE_URL }}',
+            supabaseKey: '${{ secrets.SUPABASE_KEY }}',
+          }
+          EOF
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Application
+        run: npm run build -- --configuration=development
+
+      - name: Install Netlify CLI
+        run: npm install -g netlify-cli
+
+      - name: Deploy to Netlify (Development)
+        run: netlify deploy --dir=dist/task-manager/browser --prod --site=$NETLIFY_DEV_ID
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+          NETLIFY_DEV_ID: ${{ secrets.NETLIFY_DEV_ID }}
