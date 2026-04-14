@@ -30,6 +30,12 @@ export class TaskFormDialog {
   error = signal<string | null>(null)
 
   onSubmit(input: TaskInput) {
+    if (this.task && input.title === this.task.title
+      && (input.description ?? null) === (this.task.description ?? null)) {
+      this.dialogRef.close()
+      return
+    }
+
     this.submitting.set(true)
     this.error.set(null)
 

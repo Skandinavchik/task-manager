@@ -6,7 +6,7 @@ export class NotificationService {
   private readonly snackBar = inject(MatSnackBar)
 
   success(message: string, config?: MatSnackBarConfig) {
-    this.snackBar.open(message, 'Dismiss', {
+    this.snackBar.open(message, undefined, {
       duration: 3000,
       panelClass: ['snackbar-success'],
       ...config,
@@ -14,7 +14,7 @@ export class NotificationService {
   }
 
   error(message: string, config?: MatSnackBarConfig) {
-    this.snackBar.open(message, 'Dismiss', {
+    this.snackBar.open(message, undefined, {
       duration: 5000,
       panelClass: ['snackbar-error'],
       ...config,
