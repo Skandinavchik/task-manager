@@ -1,0 +1,7 @@
+@use '@angular/material' as mat;
+
+:root {
+  @include mat.dialog-overrides((
+    container-shape: 0.5rem
+  ));
+}
