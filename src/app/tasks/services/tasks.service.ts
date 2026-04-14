@@ -63,6 +63,21 @@ export class TasksService {
     this.loadMore$.next()
   }
 
+  getTask(id: string): Observable<Task> {
+    return defer(() =>
+      this.supabaseService.client
+        .from('tasks')
+        .select('*')
+        .eq('id', id)
+        .single(),
+    ).pipe(
+      map(({ data, error }) => {
+        if (error) throw new Error(error.message)
+        return data as Task
+      }),
+    )
+  }
+
   createTask(input: TaskInput): Observable<Task> {
     return defer(() =>
       this.supabaseService.client
@@ -77,6 +92,44 @@ export class TasksService {
       }),
       tap(task => {
         this.tasks.update(prev => [task, ...prev])
+        this.error.set(null)
+      }),
+    )
+  }
+
+  updateTask(id: string, input: Partial<TaskInput>): Observable<Task> {
+    return defer(() =>
+      this.supabaseService.client
+        .from('tasks')
+        .update(input)
+        .eq('id', id)
+        .select()
+        .single(),
+    ).pipe(
+      map(({ data, error }) => {
+        if (error) throw new Error(error.message)
+        return data as Task
+      }),
+      tap(updated => {
+        this.tasks.update(prev => prev.map(t => (t.id === updated.id ? updated : t)))
+        this.error.set(null)
+      }),
+    )
+  }
+
+  completeTask(id: string): Observable<void> {
+    return defer(() =>
+      this.supabaseService.client
+        .from('tasks')
+        .delete({ count: 'exact' })
+        .eq('id', id),
+    ).pipe(
+      map(({ error, count }) => {
+        if (error) throw new Error(error.message)
+        if (!count) throw new Error('Task was not deleted (check RLS delete policy)')
+      }),
+      tap(() => {
+        this.tasks.update(prev => prev.filter(t => t.id !== id))
         this.error.set(null)
       }),
     )

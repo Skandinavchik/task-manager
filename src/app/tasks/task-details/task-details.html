@@ -1,1 +1,38 @@
-<p>task id: {{ id() }}</p>
+<header class="flex items-center gap-2 p-2">
+  <button matIconButton [routerLink]="backLink" aria-label="Back to tasks">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+</header>
+
+@if (taskResource.isLoading()) {
+  <div class="flex justify-center p-8">
+    <mat-spinner diameter="40" />
+  </div>
+} @else if (taskResource.error(); as err) {
+  <div class="p-4 text-(--mat-sys-error)">
+    Failed to load task: {{ err.message }}
+  </div>
+} @else if (taskResource.value(); as task) {
+  <article class="p-4 flex flex-col gap-4">
+    <h1 class="text-2xl font-medium">{{ task.title }}</h1>
+    <p class="text-sm text-(--mat-sys-secondary)">
+      Created {{ task.created_at | date: 'medium' }}
+    </p>
+    @if (task.description) {
+      <p class="whitespace-pre-wrap">{{ task.description }}</p>
+    } @else {
+      <p class="italic text-(--mat-sys-secondary)">No description</p>
+    }
+
+    <div class="flex gap-2 pt-2">
+      <button matButton="outlined" (click)="onEdit()">
+        <mat-icon>edit</mat-icon>
+        Update
+      </button>
+      <button matButton="filled" (click)="onComplete()" [disabled]="completing()">
+        <mat-icon>check</mat-icon>
+        Complete
+      </button>
+    </div>
+  </article>
+}

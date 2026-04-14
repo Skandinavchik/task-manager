@@ -31,19 +31,20 @@ export class TaskFormDialog {
     this.submitting.set(true)
     this.error.set(null)
 
-    this.tasksService
-      .createTask(input)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: task => {
-          this.submitting.set(false)
-          this.dialogRef.close(task)
-        },
-        error: err => {
-          this.submitting.set(false)
-          this.error.set(err?.message ?? 'Failed to save task')
-        },
-      })
+    const request$ = this.task
+      ? this.tasksService.updateTask(this.task.id, input)
+      : this.tasksService.createTask(input)
+
+    request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: task => {
+        this.submitting.set(false)
+        this.dialogRef.close(task)
+      },
+      error: err => {
+        this.submitting.set(false)
+        this.error.set(err?.message ?? 'Failed to save task')
+      },
+    })
   }
 
   onCancel() {
