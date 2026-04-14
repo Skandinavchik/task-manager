@@ -6,6 +6,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
 import { MatDialog } from '@angular/material/dialog'
+import { filter, switchMap } from 'rxjs'
+import { ConfirmDialog, ConfirmDialogData } from '../../shared/confirm-dialog/confirm-dialog'
+import { NotificationService } from '../../shared/notification.service'
 import { LayoutService } from '../services/layout.service'
 import { TasksService } from '../services/tasks.service'
 import { TaskFormDialog, TaskFormDialogData } from '../task-form-dialog/task-form-dialog'
@@ -27,6 +30,7 @@ export class TaskDetails implements OnInit, OnDestroy {
 
   private readonly layout = inject(LayoutService)
   private readonly tasksService = inject(TasksService)
+  private readonly notification = inject(NotificationService)
   private readonly dialog = inject(MatDialog)
   private readonly router = inject(Router)
   private readonly destroyRef = inject(DestroyRef)
@@ -68,13 +72,30 @@ export class TaskDetails implements OnInit, OnDestroy {
     const task = this.taskResource.value()
     if (!task || this.completing()) return
 
-    this.completing.set(true)
-    this.tasksService
-      .completeTask(task.id)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+    this.dialog
+      .open<ConfirmDialog, ConfirmDialogData, boolean>(ConfirmDialog, {
+        width: '400px',
+        maxWidth: '95vw',
+        data: {
+          title: 'Complete task?',
+          message: `"${task.title}" will be removed. This cannot be undone.`,
+          confirmLabel: 'Complete',
+          destructive: true,
+        },
+      })
+      .afterClosed()
+      .pipe(
+        filter((confirmed): confirmed is true => confirmed === true),
+        switchMap(() => {
+          this.completing.set(true)
+          return this.tasksService.completeTask(task.id)
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe({
         next: () => {
           this.completing.set(false)
+          this.notification.success('Task completed')
           this.router.navigate(this.backLink)
         },
         error: () => this.completing.set(false),

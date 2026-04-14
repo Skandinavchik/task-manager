@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog'
+import { NotificationService } from '../../shared/notification.service'
 import { Task, TaskInput, TasksService } from '../services/tasks.service'
 import { TaskForm } from '../task-form/task-form'
 
@@ -16,6 +17,7 @@ export type TaskFormDialogData = {
 })
 export class TaskFormDialog {
   private readonly tasksService = inject(TasksService)
+  private readonly notification = inject(NotificationService)
   private readonly dialogRef = inject(MatDialogRef<TaskFormDialog, Task>)
   private readonly data = inject<TaskFormDialogData>(MAT_DIALOG_DATA, { optional: true }) ?? {}
   private readonly destroyRef = inject(DestroyRef)
@@ -38,6 +40,7 @@ export class TaskFormDialog {
     request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: task => {
         this.submitting.set(false)
+        this.notification.success(this.task ? 'Task updated' : 'Task created')
         this.dialogRef.close(task)
       },
       error: err => {

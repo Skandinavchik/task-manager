@@ -13,11 +13,18 @@
     }
   </li>
   } @empty {
-  @if (!tasksService.isLoading()) {
-  <li class="text-center py-12 text-(--mat-sys-secondary)">
-    No tasks found.
-  </li>
-  }
+    @if (!tasksService.isLoading()) {
+      @if (tasksService.searchQuery()) {
+        <li class="text-center py-12 text-(--mat-sys-secondary)">
+          No tasks match "{{ tasksService.searchQuery() }}".
+        </li>
+      } @else {
+        <li class="flex flex-col items-center gap-4 py-12 text-(--mat-sys-secondary)">
+          <p>No tasks yet — create your first one.</p>
+          <button matButton="filled" (click)="openCreateDialog()">Create Task</button>
+        </li>
+      }
+    }
   }
 </ul>
 

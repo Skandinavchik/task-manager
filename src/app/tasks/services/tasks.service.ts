@@ -1,6 +1,7 @@
-import { Injectable, inject, signal } from '@angular/core'
+import { Injectable, effect, inject, signal } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { Observable, Subject, defer, filter, map, switchMap, tap } from 'rxjs'
+import { NotificationService } from '../../shared/notification.service'
 import { SupabaseService } from '../../supabase/supabase'
 
 export type Task = {
@@ -18,6 +19,7 @@ export type TaskInput = {
 @Injectable({ providedIn: 'root' })
 export class TasksService {
   private supabaseService = inject(SupabaseService)
+  private notification = inject(NotificationService)
   private readonly PAGE_SIZE = 10
 
   tasks = signal<Task[]>([])
@@ -29,6 +31,11 @@ export class TasksService {
   private readonly loadMore$ = new Subject<void>()
 
   constructor() {
+    effect(() => {
+      const msg = this.error()
+      if (msg) this.notification.error(msg)
+    })
+
     this.loadMore$
       .pipe(
         filter(() => !this.isLoading() && this.hasMore()),
