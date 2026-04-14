@@ -19,6 +19,8 @@ export class TasksService {
     const { data, error } = await this.supabaseService.client
       .from('tasks')
       .select('*')
+      .limit(10)
+      .order('created_at', { ascending: false })
 
     if (error) {
       console.error('Error loading tasks:', error)

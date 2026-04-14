@@ -1,7 +1,11 @@
-<app-search class="grow" placeholder="Search tasks..." [debounceMs]="300" (search)="onSearch($event)" />
+<div class="sticky top-0 z-10 bg-[var(--mat-sys-surface)]">
+  <app-search class="grow block" placeholder="Search tasks..." [debounceMs]="300" (search)="onSearch($event)" />
+</div>
 
 @if (tasksService.isLoading()) {
-<p>Loading...</p>
+<div class="flex justify-center p-8">
+  <mat-spinner diameter="40"></mat-spinner>
+</div>
 } @else {
 <ul class="space-y-4 px-4 pb-4">
   @for (task of tasksService.tasks(); track task.id) {
