@@ -1,12 +1,7 @@
-<div class="sticky top-0 z-10 bg-[var(--mat-sys-surface)]">
+<div class="sticky top-0 z-10 bg-(--mat-sys-surface)">
   <app-search class="grow block" placeholder="Search tasks..." [debounceMs]="300" (search)="onSearch($event)" />
 </div>
 
-@if (tasksService.isLoading()) {
-<div class="flex justify-center p-8">
-  <mat-spinner diameter="40"></mat-spinner>
-</div>
-} @else {
 <ul class="space-y-4 px-4 pb-4">
   @for (task of tasksService.tasks(); track task.id) {
   <li>
@@ -17,9 +12,22 @@
     }
   </li>
   } @empty {
+  @if (!tasksService.isLoading()) {
   <li class="text-center py-12 text-(--mat-sys-secondary)">
     No tasks found.
   </li>
   }
+  }
 </ul>
+
+@if (tasksService.isLoading()) {
+<div class="flex justify-center p-8">
+  <mat-spinner diameter="40"></mat-spinner>
+</div>
+}
+
+@if (tasksService.hasMore()) {
+<div #scrollTrigger class="h-10 flex justify-center items-center">
+  <span class="text-sm text-(--mat-sys-secondary)">Loading more...</span>
+</div>
 }
