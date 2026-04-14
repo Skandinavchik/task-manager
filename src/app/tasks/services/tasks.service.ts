@@ -16,10 +16,20 @@ export class TasksService {
   tasks = signal<Task[]>([])
   totalCount = signal(0)
   isLoading = signal(false)
+  searchQuery = signal('')
 
   hasMore = computed(() => this.tasks().length < this.totalCount())
 
   async loadTasks() {
+    this.searchQuery.set('')
+    this.tasks.set([])
+    this.totalCount.set(0)
+    await this.loadMore()
+  }
+
+  async search(query: string) {
+    if (this.searchQuery() === query) return
+    this.searchQuery.set(query)
     this.tasks.set([])
     this.totalCount.set(0)
     await this.loadMore()
@@ -36,6 +46,12 @@ export class TasksService {
       .order('created_at', { ascending: false })
       .order('id', { ascending: false })
       .limit(this.PAGE_SIZE)
+
+    const searchStr = this.searchQuery().trim()
+    if (searchStr) {
+      const safeQuery = searchStr.replace(/"/g, '""')
+      query = query.or(`title.ilike."%${safeQuery}%",description.ilike."%${safeQuery}%"`)
+    }
 
     const tasks = this.tasks()
     const lastItem = tasks[tasks.length - 1]

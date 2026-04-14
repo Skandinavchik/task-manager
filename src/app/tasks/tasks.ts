@@ -3,10 +3,11 @@ import { Search } from '../search/search'
 import { TaskCard } from './task-card/task-card'
 import { TasksService } from './services/tasks.service'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
+import { MatButtonModule } from '@angular/material/button'
 
 @Component({
   selector: 'app-tasks',
-  imports: [Search, TaskCard, MatProgressSpinnerModule],
+  imports: [Search, TaskCard, MatProgressSpinnerModule, MatButtonModule],
   templateUrl: './tasks.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -36,6 +37,6 @@ export class Tasks implements OnInit {
   }
 
   onSearch(queryString: string) {
-    console.log(queryString)
+    this.tasksService.search(queryString)
   }
 }
